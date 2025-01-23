@@ -70,3 +70,32 @@ def bfs_recursive(graph, queue, visited=None):
         queue.extend(set(graph[vertex]) - visited)
     # Рекурсивний виклик функції з тією ж чергою та множиною відвіданих вершин
     bfs_recursive(graph, queue, visited)
+
+
+# Алгоритм Дейкстри
+def dijkstra(graph, start):
+    # Ініціалізація відстаней, попередників та множини невідвіданих вершин
+    distances = {vertex: float('infinity') for vertex in graph}
+    distances[start] = 0
+    previous_vertices = {vertex: None for vertex in graph}
+    unvisited = list(graph.keys())
+
+    while unvisited:
+        # Знаходження вершини з найменшою відстанню серед невідвіданих
+        current_vertex = min(unvisited, key=lambda vertex: distances[vertex])
+
+        # Якщо поточна відстань є нескінченністю, завершуємо обхід
+        if distances[current_vertex] == float('infinity'):
+            break
+
+        # Оновлюємо відстані до сусідніх вершин
+        for neighbor, weight in graph[current_vertex].items():
+            distance = distances[current_vertex] + weight
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+                previous_vertices[neighbor] = current_vertex
+
+        # Видаляємо поточну вершину з множини невідвіданих
+        unvisited.remove(current_vertex)
+
+    return distances, previous_vertices
